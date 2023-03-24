@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "MSRC",
+    "name": "MSRA",
     "version": "1.0",
     "permissions": [
       "webRequest",
