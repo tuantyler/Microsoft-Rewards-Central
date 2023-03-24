@@ -1,11 +1,11 @@
 chrome.runtime.sendMessage({req_flag: "PHONE_MODE_OFF"})
+document.getElementById("MSRC_lastestTimeRedeem").innerHTML = localStorage.getItem('MSRC_lastestTimeRedeem')
 fetch('https://rewards.bing.com/api/getuserinfo?type=1').then(response => response.json()).then(data => {
     document.getElementById("availablePoints").innerHTML = data.dashboard.userStatus.availablePoints
     document.getElementById("todayPoints").innerHTML = data.dashboard.userStatus.counters.dailyPoint[0].pointProgress
     document.getElementById("pcSearch").innerHTML = data.dashboard.userStatus.counters.pcSearch[0].pointProgress + "/" + data.dashboard.userStatus.counters.pcSearch[0].pointProgressMax
     document.getElementById("edgeSearch").innerHTML = data.dashboard.userStatus.counters.pcSearch[1].pointProgress + "/" + data.dashboard.userStatus.counters.pcSearch[1].pointProgressMax
     typeof data.dashboard.userStatus.counters.mobileSearch?.[0].pointProgress === "undefined" ? document.getElementById("mobileSearch").innerHTML = "0/0" : document.getElementById("mobileSearch").innerHTML = data.dashboard.userStatus.counters.mobileSearch[0].pointProgress + "/" + data.dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
-    document.getElementById("MSRC_lastestTimeRedeem").innerHTML = localStorage.getItem('MSRC_lastestTimeRedeem')
 })
 function generateRandomQueries(numQueries, minLength, maxLength) {
     var queries = []
@@ -53,6 +53,9 @@ if (JSON.parse(localStorage.getItem("MSRC_autoRedeemInProcess"))) {
 }
 document.getElementById("btnRedeem").addEventListener("click", function (e) {
     searchPCRecursion(generateRandomQueries(50,5,20) , 0)
+    localStorage.setItem("MSRC_lastestTimeRedeem" , new Date())
+    localStorage.setItem("MSRC_lastRun", new Date())
+    document.getElementById("btnRedeem").disabled = true
     document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Starting...'
     document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Redeem searching...'
 })
