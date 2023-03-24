@@ -37,12 +37,19 @@ async function searchPCRecursion(queries , index){
         searchPCRecursion(queries, index+1)
     })
 }
+function isMoreThan24Hours(dateString1, dateString2) {
+    var date1 = new Date(dateString1);
+    var date2 = new Date(dateString2);
+    var difference = Math.abs(date1.getTime() - date2.getTime());
+    var hours = difference / 3600000;
+    return hours > 24;
+}
 chrome.runtime.onStartup.addListener(() => {
     var lastRun = localStorage.getItem('MSRC_lastRun')
-    var currentDate = new Date().toDateString()
-    if (lastRun !== currentDate) {
+    var currentDate = new Date()
+    if (isMoreThan24Hours(currentDate,lastRun)) {
         localStorage.setItem("MSRC_autoRedeemInProcess" , true)
-        localStorage.setItem("MSRC_lastestTimeRedeem" , new Date().toLocaleString('vi-VN'))
+        localStorage.setItem("MSRC_lastestTimeRedeem" , new Date())
         localStorage.setItem("MSRC_lastRun", currentDate)
         searchPCRecursion(generateRandomQueries(50,5,20) , 0)
     }
