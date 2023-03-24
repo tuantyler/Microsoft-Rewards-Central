@@ -10,6 +10,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
         body {
+            user-select: none;
             font-size: 14px;
             padding: 20px;
             max-height: 350px;
@@ -22,13 +23,15 @@
     </style>
 </head>
 <body>
-    <div class="alert" style="background: #702cf5;">
+
+    <div class="alert" style="background: #702cf5;" id="banner">
         <i class="fa fa-trophy" aria-hidden="true"></i>
         <p class="m-0 fw-bold">MSRA</p>
         <small>Lastest time redeem</small> 
         <br>
         <small id="MSRC_lastestTimeRedeem" class="fw-bold"></small>
     </div>
+
     <label>Available points: <span id="availablePoints" class="fw-bold"></span></label>
     <br>
     <label style="margin-bottom: 10px;">Today's points: <span id="todayPoints" class="fw-bold"></span></label>

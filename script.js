@@ -35,7 +35,6 @@ async function searchMobileRecursion(queries , index){
         searchMobileRecursion(queries, index+1)
     })
 }
-
 async function searchPCRecursion(queries , index){
     console.log(index)
     if (index >= queries.length) {
@@ -57,3 +56,6 @@ document.getElementById("btnRedeem").addEventListener("click", function (e) {
     document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Starting...'
     document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Redeem searching...'
 })
+document.getElementById("banner").addEventListener("click", function (e) {
+    window.open("https://rewards.bing.com/", "_blank");
+})    
