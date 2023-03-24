@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        body {
+            font-size: 14px;
+            padding: 20px;
+            max-height: 280px;
+            width: 300px;
+            overflow: auto;
+            color: white;
+            background: #212529;
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="alert" style="background: #702cf5;">
+        <i class="fa fa-trophy" aria-hidden="true"></i> Microsoft Rewards Central
+    </div>
+    <label>Available points: <span id="availablePoints" class="fw-bold"></span></label>
+    <br>
+    <label style="margin-bottom: 10px;">Today's points: <span id="todayPoints" class="fw-bold"></span></label>
+
+    <br>
+    <small class="fw-bold">EARNING</small>
+    <div class="row">
+        <div class="col">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width="17" height="17">
+                <path
+                    d="M1792 384v896H256V384h1536zm256 1280q0 27-10 50t-27 40-41 28-50 10H128q-27 0-50-10t-40-27-28-41-10-50q0-16 3-35t8-37 14-35 21-29l120-120h1717l57 57q28 28 57 58 12 13 21 30t16 35 10 38 4 38z"
+                    style="fill: white"></path>
+            </svg>
+            <span id="pcSearch" class="fw-bold"></span>
+        </div>
+        <div class="col">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width="15" height="15">
+                <path
+                    d="M1865 1519q12 0 21 10t10 22q0 10-10 27t-27 40-37 45-38 43-32 35-19 20q-49 46-114 89t-137 78-148 54-143 21q-76 0-144-24t-126-66-104-100-78-123-50-137-18-142q0-85 28-167t74-154q12 81 47 151t87 128 118 103 139 77 152 47 154 17q95 0 185-19t176-62q8-4 17-8t17-5zM543 1411q0 93 23 183t66 173 106 151 142 120q-126-17-239-63t-212-117-177-162-135-199-86-227-31-246q0-69 27-127t71-105 102-81 116-57q63-23 128-33t132-11q60 0 121 9t120 29 112 49 99 71q-30 0-59 6t-56 20v-2q-54 24-102 63t-90 88-74 108-56 119-35 122-13 119zM1020 0q145 0 284 33t262 98 224 165 169 231q42 80 65 166t24 178q0 76-20 145t-58 127-94 103-124 76q-46 20-95 31t-99 11q-36 0-82-2t-94-11-90-24-72-42q-10-8-19-21t-9-28q0-13 13-30t30-42 31-59 14-81q0-90-34-167t-90-140-130-109-153-76q-72-26-146-38t-151-12q-132 0-261 38T80 639q61-148 155-266t214-201T714 45t306-45z"
+                    style="fill: white;"></path>
+            </svg>
+            <span id="edgeSearch" class="fw-bold"></span>
+        </div>
+        <div class="col">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width="15" height="15">
+                <path
+                    d="M1536 0q27 0 50 10t40 27 28 41 10 50v1792q0 27-10 50t-27 40-41 28-50 10H512q-27 0-50-10t-40-27-28-41-10-50V128q0-27 10-50t27-40 41-28 50-10h1024zm-384 1792v-128H896v128h256z"
+                    style="fill: white;"></path>
+            </svg>
+            <span id="mobileSearch" class="fw-bold"></span>
+        </div>
+    </div>
+
+    <button class="btn btn-sm btn-success w-100 mt-3" id="btnRedeem"><i class="fa fa-play" aria-hidden="true"></i> One-Click Redeem</button>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>
