@@ -1,9 +1,21 @@
 let phone = false
+chrome.runtime.onStartup.addListener(() => {
+    var lastRun = localStorage.getItem('MSRC_lastRun')
+    var currentDate = new Date().toDateString()
+    if (lastRun !== currentDate) {
+        chrome.runtime.sendMessage({functionName: 'startAutomationRedeem', args: []});
+        localStorage.setItem("MSRC_lastestTimeRedeem" , new Date().toLocaleString('vi-VN'))
+        localStorage.setItem("MSRC_lastRun", currentDate)
+    }
+})
 chrome.runtime.onMessage.addListener(function(request) {
     request.req_flag == "PHONE_MODE_ON" ? phone = true : phone = false
-});
+})
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details){
     for(var i=0; i < details.requestHeaders.length; ++i){
+        if(details.requestHeaders[i].name === "User-Agent"){
+            details.requestHeaders[i].value = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.51"
+        }
         if(details.requestHeaders[i].name === "Host"){
             details.requestHeaders[i].value = "rewards.bing.com"
         }

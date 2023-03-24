@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "Microsoft Rewards Central",
+    "name": "MSRC",
     "version": "1.0",
     "permissions": [
       "webRequest",

@@ -5,7 +5,15 @@ fetch('https://rewards.bing.com/api/getuserinfo?type=1').then(response => respon
     document.getElementById("pcSearch").innerHTML = data.dashboard.userStatus.counters.pcSearch[0].pointProgress + "/" + data.dashboard.userStatus.counters.pcSearch[0].pointProgressMax
     document.getElementById("edgeSearch").innerHTML = data.dashboard.userStatus.counters.pcSearch[1].pointProgress + "/" + data.dashboard.userStatus.counters.pcSearch[1].pointProgressMax
     document.getElementById("mobileSearch").innerHTML = data.dashboard.userStatus.counters.mobileSearch[0].pointProgress + "/" + data.dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
+    document.getElementById("MSRC_lastestTimeRedeem").innerHTML = localStorage.getItem('MSRC_lastestTimeRedeem')
 })
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.functionName === 'startAutomationRedeem') {
+        searchPCRecursion(generateRandomQueries(50,5,20) , 0)
+    }
+})
+
 function generateRandomQueries(numQueries, minLength, maxLength) {
     var queries = []
     var words = ["apple", "banana", "orange", "pineapple", "grape", "peach", "pear", "watermelon", "melon", "kiwi", "mango", "strawberry", "blueberry", "raspberry", "blackberry", "cherry", "plum", "apricot", "nectarine", "fig"]
