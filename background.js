@@ -1,11 +1,50 @@
 let phone = false
+localStorage.setItem("MSRC_autoRedeemInProcess" , false)
+function generateRandomQueries(numQueries, minLength, maxLength) {
+    var queries = []
+    var words = ["apple", "banana", "orange", "pineapple", "grape", "peach", "pear", "watermelon", "melon", "kiwi", "mango", "strawberry", "blueberry", "raspberry", "blackberry", "cherry", "plum", "apricot", "nectarine", "fig"]
+
+    for (var i = 0 ;i < numQueries ; i++) {
+        var query = ""
+        while (query === "" || queries.includes(query)) {
+            var length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength
+            query = words[Math.floor(Math.random() * words.length)]
+            for (var j = 1 ;j < length ;j++) {
+                query += " " + words[Math.floor(Math.random() * words.length)]
+            }
+        }
+        queries.push(query)
+    }
+    return queries
+}
+async function searchMobileRecursion(queries , index){
+    if (index >= queries.length) {
+        phone = false
+        localStorage.setItem("MSRC_autoRedeemInProcess" , false)
+        return
+    } 
+    await fetch("https://www.bing.com/search?q=" + encodeURIComponent(queries[index]) + "&PC=OPALIOS&form=LWS001&ssp=1&cc=VN&setlang=en&darkschemeovr=1&safesearch=moderate").then(response => response).then(data => {
+        searchMobileRecursion(queries, index+1)
+    })
+}
+async function searchPCRecursion(queries , index){
+    if (index >= queries.length) {
+        phone = true
+        searchMobileRecursion(generateRandomQueries(50,5,20) , 0)
+        return
+    }
+    await fetch("https://www.bing.com/search?q=" + encodeURIComponent(queries[index])).then(response => response).then(data => {
+        searchPCRecursion(queries, index+1)
+    })
+}
 chrome.runtime.onStartup.addListener(() => {
     var lastRun = localStorage.getItem('MSRC_lastRun')
     var currentDate = new Date().toDateString()
     if (lastRun !== currentDate) {
-        chrome.runtime.sendMessage({functionName: 'startAutomationRedeem', args: []});
+        localStorage.setItem("MSRC_autoRedeemInProcess" , true)
         localStorage.setItem("MSRC_lastestTimeRedeem" , new Date().toLocaleString('vi-VN'))
         localStorage.setItem("MSRC_lastRun", currentDate)
+        searchPCRecursion(generateRandomQueries(50,5,20) , 0)
     }
 })
 chrome.runtime.onMessage.addListener(function(request) {
