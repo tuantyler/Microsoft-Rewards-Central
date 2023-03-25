@@ -80,4 +80,4 @@ document.getElementById("btnRedeem").addEventListener("click", function (e) {
 })
 document.getElementById("banner").addEventListener("click", function (e) {
     window.open("https://rewards.bing.com/", "_blank");
-})    
+})
