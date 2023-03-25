@@ -46,7 +46,7 @@ function getTimeDifference(dateString) {
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const threeAM = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 3);
     const inputDate = new Date(dateString);
-    return inputDate.toDateString() === today.toDateString() && inputDate >= threeAM || inputDate < today
+    return inputDate <= threeAM && now > threeAM
 }
 chrome.runtime.onStartup.addListener(() => {
     var lastRun = localStorage.getItem('MSRA_lastRun')
