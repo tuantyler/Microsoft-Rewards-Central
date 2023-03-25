@@ -1,5 +1,23 @@
 chrome.runtime.sendMessage({req_flag: "PHONE_MODE_OFF"})
-document.getElementById("MSRC_lastestTimeRedeem").innerHTML = localStorage.getItem('MSRC_lastestTimeRedeem')
+function getTimeLeft() {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const threeAM = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 3);
+    const threeAMTomorrow = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 3);
+    let timeDifference
+    now < threeAM ? timeDifference = threeAM - now : timeDifference = threeAMTomorrow - now 
+    const seconds = Math.floor(timeDifference / 1000) % 60;
+    const minutes = Math.floor(timeDifference / (1000 * 60)) % 60;
+    const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+    const paddedHours = hours.toString().padStart(2, '0');
+    const paddedMinutes = minutes.toString().padStart(2, '0');
+    const paddedSeconds = seconds.toString().padStart(2, '0');
+    return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+}
+setInterval(function() {
+    document.getElementById("MSRA_wait").innerHTML = getTimeLeft()
+}, 1000)
 fetch('https://rewards.bing.com/api/getuserinfo?type=1').then(response => response.json()).then(data => {
     document.getElementById("availablePoints").innerHTML = data.dashboard.userStatus.availablePoints
     document.getElementById("todayPoints").innerHTML = data.dashboard.userStatus.counters.dailyPoint[0].pointProgress
@@ -38,7 +56,7 @@ async function searchMobileRecursion(queries , index){
 async function searchPCRecursion(queries , index){
     console.log(index)
     if (index >= queries.length) {
-        chrome.runtime.sendMessage({req_flag: "PHONE_MODE_ON"})
+        chrome.runtime.sendMessage({req_flag: "MSRA_phone"})
         searchMobileRecursion(generateRandomQueries(50,5,20) , 0)
         return
     }
@@ -47,14 +65,13 @@ async function searchPCRecursion(queries , index){
         searchPCRecursion(queries, index+1)
     })
 }
-if (JSON.parse(localStorage.getItem("MSRC_autoRedeemInProcess"))) {
+if (JSON.parse(localStorage.getItem("MSRA_inProcess"))) {
     document.getElementById("btnRedeem").disabled = true
     document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Auto redeem in process...'
 }
 document.getElementById("btnRedeem").addEventListener("click", function (e) {
     searchPCRecursion(generateRandomQueries(50,5,20) , 0)
-    localStorage.setItem("MSRC_lastestTimeRedeem" , new Date())
-    localStorage.setItem("MSRC_lastRun", new Date())
+    localStorage.setItem("MSRA_lastRun", new Date())
     document.getElementById("btnRedeem").disabled = true
     document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Starting...'
     document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Redeem searching...'

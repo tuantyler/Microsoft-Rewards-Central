@@ -1,5 +1,9 @@
 let phone = false
-localStorage.setItem("MSRC_autoRedeemInProcess" , false)
+chrome.runtime.onMessage.addListener(function(request) {
+    request.req_flag == "MSRA_phone" ? phone = true : phone = false
+})
+localStorage.setItem("MSRA_inProcess" , false)
+
 function generateRandomQueries(numQueries, minLength, maxLength) {
     var queries = []
     var words = ["apple", "banana", "orange", "pineapple", "grape", "peach", "pear", "watermelon", "melon", "kiwi", "mango", "strawberry", "blueberry", "raspberry", "blackberry", "cherry", "plum", "apricot", "nectarine", "fig"]
@@ -20,7 +24,7 @@ function generateRandomQueries(numQueries, minLength, maxLength) {
 async function searchMobileRecursion(queries , index){
     if (index >= queries.length) {
         phone = false
-        localStorage.setItem("MSRC_autoRedeemInProcess" , false)
+        localStorage.setItem("MSRA_inProcess" , false)
         return
     } 
     await fetch("https://www.bing.com/search?q=" + encodeURIComponent(queries[index]) + "&PC=OPALIOS&form=LWS001&ssp=1&cc=VN&setlang=en&darkschemeovr=1&safesearch=moderate").then(response => response).then(data => {
@@ -37,25 +41,20 @@ async function searchPCRecursion(queries , index){
         searchPCRecursion(queries, index+1)
     })
 }
-function isMoreThan24Hours(dateString1, dateString2) {
-    var date1 = new Date(dateString1);
-    var date2 = new Date(dateString2);
-    var difference = Math.abs(date1.getTime() - date2.getTime());
-    var hours = difference / 3600000;
-    return hours > 24;
+function getTimeDifference(dateString) {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const threeAM = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 3);
+    const inputDate = new Date(dateString);
+    return inputDate.toDateString() === today.toDateString() && inputDate >= threeAM || inputDate < today
 }
 chrome.runtime.onStartup.addListener(() => {
-    var lastRun = localStorage.getItem('MSRC_lastRun')
-    var currentDate = new Date()
-    if (isMoreThan24Hours(currentDate,lastRun)) {
-        localStorage.setItem("MSRC_autoRedeemInProcess" , true)
-        localStorage.setItem("MSRC_lastestTimeRedeem" , new Date())
-        localStorage.setItem("MSRC_lastRun", currentDate)
+    var lastRun = localStorage.getItem('MSRA_lastRun')
+    if (getTimeDifference(lastRun)) {
+        localStorage.setItem("MSRA_inProcess" , true)
+        localStorage.setItem("MSRA_lastRun", new Date())
         searchPCRecursion(generateRandomQueries(50,5,20) , 0)
     }
-})
-chrome.runtime.onMessage.addListener(function(request) {
-    request.req_flag == "PHONE_MODE_ON" ? phone = true : phone = false
 })
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details){
     for(var i=0; i < details.requestHeaders.length; ++i){
