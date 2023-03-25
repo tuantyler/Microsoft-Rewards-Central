@@ -18,6 +18,8 @@ function getTimeLeft() {
 setInterval(function() {
     document.getElementById("MSRA_wait").innerHTML = getTimeLeft()
 }, 1000)
+document.getElementById("MSRA_lastRun").innerHTML = new Date(localStorage.getItem("MSRA_lastRun")).toLocaleString("vi-VN")
+
 fetch('https://rewards.bing.com/api/getuserinfo?type=1').then(response => response.json()).then(data => {
     document.getElementById("availablePoints").innerHTML = data.dashboard.userStatus.availablePoints
     document.getElementById("todayPoints").innerHTML = data.dashboard.userStatus.counters.dailyPoint[0].pointProgress
