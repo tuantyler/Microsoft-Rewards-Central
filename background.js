@@ -1,7 +1,6 @@
 let phone = false
 chrome.runtime.onMessage.addListener(function(request) {
     request.req_flag == "MSRA_phone" ? phone = true : phone = false
-    console.log(phone)
 })
 localStorage.setItem("MSRA_inProcess" , false)
 

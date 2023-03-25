@@ -56,7 +56,6 @@ async function searchMobileRecursion(queries , index){
     })
 }
 async function searchPCRecursion(queries , index){
-    console.log(index)
     if (index >= queries.length) {
         chrome.runtime.sendMessage({req_flag: "MSRA_phone"})
         searchMobileRecursion(generateRandomQueries(50,5,20) , 0)
@@ -77,7 +76,4 @@ document.getElementById("btnRedeem").addEventListener("click", function (e) {
     document.getElementById("btnRedeem").disabled = true
     document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Starting...'
     document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Redeem searching...'
-})
-document.getElementById("banner").addEventListener("click", function (e) {
-    window.open("https://rewards.bing.com/", "_blank");
 })
