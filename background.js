@@ -1,10 +1,9 @@
 let phone = false
 chrome.runtime.onMessage.addListener(function(request) {
     if (request.req_flag == "MSRA_reDeem"){
-        console.log("Flag requested")
         localStorage.setItem("MSRA_inProcess" , true)
         localStorage.setItem("MSRA_lastRun", new Date())
-        searchPCRecursion(generateRandomQueries(1,5,20) , 0)
+        searchPCRecursion(generateRandomQueries(50,5,20) , 0)
     } 
 })
 localStorage.setItem("MSRA_inProcess" , false)
@@ -38,7 +37,7 @@ async function searchMobileRecursion(queries , index){
 async function searchPCRecursion(queries , index){
     if (index >= queries.length) {
         phone = true
-        searchMobileRecursion(generateRandomQueries(1,5,20) , 0)
+        searchMobileRecursion(generateRandomQueries(50,5,20) , 0)
         return
     }
     await fetch("https://www.bing.com/search?q=" + encodeURIComponent(queries[index]))
@@ -56,7 +55,7 @@ chrome.runtime.onStartup.addListener(() => {
     if (getTimeDifference(lastRun)) {
         localStorage.setItem("MSRA_inProcess" , true)
         localStorage.setItem("MSRA_lastRun", new Date())
-        searchPCRecursion(generateRandomQueries(1,5,20) , 0)
+        searchPCRecursion(generateRandomQueries(50,5,20) , 0)
     }
 })
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details){
