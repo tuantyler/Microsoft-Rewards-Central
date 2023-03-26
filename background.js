@@ -1,6 +1,11 @@
 let phone = false
 chrome.runtime.onMessage.addListener(function(request) {
-    request.req_flag == "MSRA_phone" ? phone = true : phone = false
+    if (request.req_flag == "MSRA_reDeem"){
+        console.log("Flag requested")
+        localStorage.setItem("MSRA_inProcess" , true)
+        localStorage.setItem("MSRA_lastRun", new Date())
+        searchPCRecursion(generateRandomQueries(1,5,20) , 0)
+    } 
 })
 localStorage.setItem("MSRA_inProcess" , false)
 
@@ -27,19 +32,17 @@ async function searchMobileRecursion(queries , index){
         localStorage.setItem("MSRA_inProcess" , false)
         return
     } 
-    await fetch("https://www.bing.com/search?q=" + encodeURIComponent(queries[index]) + "&PC=OPALIOS&form=LWS001&ssp=1&cc=VN&setlang=en&darkschemeovr=1&safesearch=moderate").then(response => response).then(data => {
-        searchMobileRecursion(queries, index+1)
-    })
+    await fetch("https://www.bing.com/search?q=" + encodeURIComponent(queries[index]) + "&PC=OPALIOS&form=LWS001&ssp=1&cc=VN&setlang=en&darkschemeovr=1&safesearch=moderate")
+    searchMobileRecursion(queries, index+1)
 }
 async function searchPCRecursion(queries , index){
     if (index >= queries.length) {
         phone = true
-        searchMobileRecursion(generateRandomQueries(50,5,20) , 0)
+        searchMobileRecursion(generateRandomQueries(1,5,20) , 0)
         return
     }
-    await fetch("https://www.bing.com/search?q=" + encodeURIComponent(queries[index])).then(response => response).then(data => {
-        searchPCRecursion(queries, index+1)
-    })
+    await fetch("https://www.bing.com/search?q=" + encodeURIComponent(queries[index]))
+    searchPCRecursion(queries, index+1)
 }
 function getTimeDifference(dateString) {
     const now = new Date();
@@ -53,7 +56,7 @@ chrome.runtime.onStartup.addListener(() => {
     if (getTimeDifference(lastRun)) {
         localStorage.setItem("MSRA_inProcess" , true)
         localStorage.setItem("MSRA_lastRun", new Date())
-        searchPCRecursion(generateRandomQueries(50,5,20) , 0)
+        searchPCRecursion(generateRandomQueries(1,5,20) , 0)
     }
 })
 chrome.webRequest.onBeforeSendHeaders.addListener(function(details){

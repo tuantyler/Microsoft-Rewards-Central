@@ -1,4 +1,4 @@
-chrome.runtime.sendMessage({req_flag: "PHONE_MODE_OFF"})
+var bgPage = chrome.extension.getBackgroundPage()
 function getTimeLeft() {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -15,11 +15,14 @@ function getTimeLeft() {
     const paddedSeconds = seconds.toString().padStart(2, '0');
     return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
 }
+function MSRA_inProcess(){
+    document.getElementById("btnRedeem").disabled = true
+    document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Auto redeem in process...'
+}
 setInterval(function() {
     document.getElementById("MSRA_wait").innerHTML = getTimeLeft()
 }, 1000)
 document.getElementById("MSRA_lastRun").innerHTML = new Date(localStorage.getItem("MSRA_lastRun")).toLocaleString("vi-VN")
-
 fetch('https://rewards.bing.com/api/getuserinfo?type=1').then(response => response.json()).then(data => {
     document.getElementById("availablePoints").innerHTML = data.dashboard.userStatus.availablePoints
     document.getElementById("todayPoints").innerHTML = data.dashboard.userStatus.counters.dailyPoint[0].pointProgress
@@ -27,53 +30,10 @@ fetch('https://rewards.bing.com/api/getuserinfo?type=1').then(response => respon
     document.getElementById("edgeSearch").innerHTML = data.dashboard.userStatus.counters.pcSearch[1].pointProgress + "/" + data.dashboard.userStatus.counters.pcSearch[1].pointProgressMax
     typeof data.dashboard.userStatus.counters.mobileSearch?.[0].pointProgress === "undefined" ? document.getElementById("mobileSearch").innerHTML = "0/0" : document.getElementById("mobileSearch").innerHTML = data.dashboard.userStatus.counters.mobileSearch[0].pointProgress + "/" + data.dashboard.userStatus.counters.mobileSearch[0].pointProgressMax
 })
-function generateRandomQueries(numQueries, minLength, maxLength) {
-    var queries = []
-    var words = ["apple", "banana", "orange", "pineapple", "grape", "peach", "pear", "watermelon", "melon", "kiwi", "mango", "strawberry", "blueberry", "raspberry", "blackberry", "cherry", "plum", "apricot", "nectarine", "fig"]
-
-    for (var i = 0 ;i < numQueries ; i++) {
-        var query = ""
-        while (query === "" || queries.includes(query)) {
-            var length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength
-            query = words[Math.floor(Math.random() * words.length)]
-            for (var j = 1 ;j < length ;j++) {
-                query += " " + words[Math.floor(Math.random() * words.length)]
-            }
-        }
-        queries.push(query)
-    }
-    return queries
-}
-async function searchMobileRecursion(queries , index){
-    if (index >= queries.length) {
-        chrome.runtime.sendMessage({req_flag: "PHONE_MODE_OFF"})
-        document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-check" aria-hidden="true"></i> Done'
-        return
-    } 
-    document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Redeem mobile searching ' + (index + 1)  + '...'
-    await fetch("https://www.bing.com/search?q=" + encodeURIComponent(queries[index]) + "&PC=OPALIOS&form=LWS001&ssp=1&cc=VN&setlang=en&darkschemeovr=1&safesearch=moderate").then(response => response).then(data => {
-        searchMobileRecursion(queries, index+1)
-    })
-}
-async function searchPCRecursion(queries , index){
-    if (index >= queries.length) {
-        chrome.runtime.sendMessage({req_flag: "MSRA_phone"})
-        searchMobileRecursion(generateRandomQueries(50,5,20) , 0)
-        return
-    }
-    document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Redeem searching ' + (index + 1)  + '...'
-    await fetch("https://www.bing.com/search?q=" + encodeURIComponent(queries[index])).then(response => response).then(data => {
-        searchPCRecursion(queries, index+1)
-    })
-}
 if (JSON.parse(localStorage.getItem("MSRA_inProcess"))) {
-    document.getElementById("btnRedeem").disabled = true
-    document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Auto redeem in process...'
+    MSRA_inProcess()
 }
 document.getElementById("btnRedeem").addEventListener("click", function (e) {
-    searchPCRecursion(generateRandomQueries(50,5,20) , 0)
-    localStorage.setItem("MSRA_lastRun", new Date())
-    document.getElementById("btnRedeem").disabled = true
-    document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Starting...'
-    document.getElementById("btnRedeem").innerHTML = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Redeem searching...'
+    chrome.runtime.sendMessage({req_flag: "MSRA_reDeem"})
+    MSRA_inProcess()
 })
