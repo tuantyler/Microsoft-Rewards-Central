@@ -5,7 +5,8 @@
     "permissions": [
       "webRequest",
       "webRequestBlocking",
-      "<all_urls>"
+      "*://rewards.bing.com/*",
+      "*://www.bing.com/*"
     ],
     "background": {
         "scripts": ["background.js"]  
