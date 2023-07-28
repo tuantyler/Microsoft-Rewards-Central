@@ -1,5 +1,7 @@
 # Microsoft Rewards Automation - MSRA
 
+Since this extension runs in headless mode (request firing only), be cautious when using it, as it could make your account be marked as fraudulent and result in a ban from Microsoft.
+
 This Chrome Extension is designed to help you redeem your Microsoft Rewards points faster and more efficiently. With its intuitive interface and powerful functionality, you can easily redeem your rewards with just a few clicks.
 
 ## Features
